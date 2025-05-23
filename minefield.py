@@ -157,7 +157,7 @@ def print_Minefield() -> bool:
     # Print all Minefield
     for r in range(1, MINEFIELD_ROWS + 1):
         for c in range(1, MINEFIELD_COLUMNS + 1):
-            print(f"[{minefieldArray[r][c]}]",end='')
+            print("["+ f"  {minefieldArray[r][c]}"[-3:] + "]",end='')
         print()
 
 fill_Minefield(20)
