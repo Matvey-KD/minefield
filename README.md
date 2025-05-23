@@ -1,2 +1,3 @@
 # minefield
+
 The minefield game
