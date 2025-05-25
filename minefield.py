@@ -3,23 +3,18 @@ import random
 MINEFIELD_ROWS = 10
 MINEFIELD_COLUMNS = 10
 
-"""
-Create matrix (list of lists) and fill it by "0"
-recipe: https://stackoverflow.com/questions/6667201/how-to-define-a-two-dimensional-array
-"""
+# Create matrix (list of lists) and fill it by "0"
+# recipe: https://stackoverflow.com/questions/6667201/how-to-define-a-two-dimensional-array
+
 minefieldArray = [[0 for c in range(MINEFIELD_COLUMNS+2)] for r in range(MINEFIELD_ROWS+2)]
 
-"""
-Our idealogy:
-(-1) - mine in the cell
-(+10) - cell is opened
-(+100) - minesweeper in the cell
-(0..8) - number mines in the the neighboring cells
-"""
+# Our idealogy:
+# (-1) - mine in the cell
+# (+10) - cell is opened
+# (+100) - minesweeper in the cell
+# (0..8) - number mines in the the neighboring cells
 
-"""
-Fill Minefield with new values.
-"""
+# Fill Minefield with new values.
 def fill_Minefield(mineNumber: int) -> bool:
 
     # Fill all minefieldArray by "0"
@@ -33,7 +28,7 @@ def fill_Minefield(mineNumber: int) -> bool:
         r = random.randint(1, MINEFIELD_ROWS)
         c = random.randint(1, MINEFIELD_COLUMNS)
         # Don't put mine in first and last corners
-        if ((r != 1 and c !=1) or (r != MINEFIELD_ROWS and c !=MINEFIELD_COLUMNS)):
+        if (not ((r == 1 and c == 1) or (r == MINEFIELD_ROWS and c == MINEFIELD_COLUMNS))):
             minefieldArray[r][c] = -1
             m +=1
 
@@ -53,19 +48,17 @@ def fill_Minefield(mineNumber: int) -> bool:
                 minefieldArray[r][c] = n
 
     # Open first corner and put minesweeper to it
-    minefieldArray[1][1] = 110
+    minefieldArray[1][1] += 110
     # Open last corner
-    minefieldArray[MINEFIELD_ROWS][MINEFIELD_COLUMNS] = 10
+    minefieldArray[MINEFIELD_ROWS][MINEFIELD_COLUMNS] += 10
 
     return True
 
-"""
-Do one step at the Minefield.
-Minesweeper can step only to the neighboring cells.
-Minesweeper will open this cell if it was closed.
-Minesweeper will blow up if mine was in this cell.
-Function returns true if we don't blow up
-"""
+# Do one step at the Minefield.
+# Minesweeper can step only to the neighboring cells.
+# Minesweeper will open this cell if it was closed.
+# Minesweeper will blow up if mine was in this cell.
+# Function returns true if we don't blow up
 def do_Step_Minefield(toRow: int, toColumn: int) -> bool:
 
     # We are stepping to this cell
@@ -148,30 +141,41 @@ def do_Step_Minefield(toRow: int, toColumn: int) -> bool:
 
     return True
 
-"""
-It is temporary function.
-Print all Minefield to console
-"""
-def print_Minefield() -> bool:
+# It is temporary function.
+# Print all Minefield to console
+# If showMine = True then show mines
+def print_Minefield(showMine:bool) -> bool:
 
     # Print all Minefield
     for r in range(1, MINEFIELD_ROWS + 1):
         for c in range(1, MINEFIELD_COLUMNS + 1):
-            print("["+ f"  {minefieldArray[r][c]}"[-3:] + "]",end='')
+            v = minefieldArray[r][c]
+            if (v >= 110):
+                print("["+ f"X {v - 110}"[-3:] + "]",end='')
+            elif (v >= 10):
+                print("["+ f"  {v - 10}"[-3:] + "]",end='')
+            elif ((v == -1) and showMine):
+                print("[!+!]",end='')
+            else:
+                print("[   ]",end='')
         print()
 
-fill_Minefield(20)
+# ********************************************************************
+# There is simple play process
+#
 
-print_Minefield()
+fill_Minefield(13)
 
-print("Do step: ", end='')
-r, c =  map(int, input().split())
+print_Minefield(False)
+r, c =  map(int, input("Do step (ctrl+c for stop), row column: ").split())
+print()
 
-while ((r != 0) or (c != 0) ):
+while (True):
 
     if (not do_Step_Minefield(r, c)):
         print("You are blowed up!!!")
+        print_Minefield(True)
         break
-    print_Minefield()
-    print("Do step: ", end='')
-    r, c =  map(int, input().split())
+    print_Minefield(False)
+    r, c =  map(int, input("Do step (ctrl+c for stop), row column: ").split())
+    print()
