@@ -2,21 +2,22 @@ import pygame
 
 pygame.init()
 # Код, описывающий окно программы
-w = 300  # Ширина окна
-h = 300  # Высота окна
+w = 600  # Ширина окна
+h = 600  # Высота окна
 screen = pygame.display.set_mode([w, h])
-screen.fill([255,255,255])
 
+
+cellclose = pygame.image.load('minefield\\background\\paralax-background.png')
 wc = w // 12
 hc = h // 12
-delta=3
+delta=w // 100
+cellclose = pygame.transform.scale(cellclose, (wc-delta,hc-delta))
 
-for r in range(0,10):
-    for c in range(0,10):
-        x = wc + c * wc
-        y = hc + r * hc
-        pygame.draw.rect(screen, [0,0,0],[x,y,wc-delta,hc-delta])
-        pygame.display.flip()
+
+fon = pygame.image.load('minefield\\background\\bg7.png')
+fon_x = 0
+fon_y = 0
+
 
 # Создаём контроль FPS
 clock = pygame.time.Clock()  # Создаём таймер
@@ -35,7 +36,13 @@ while game_run:
 
     # БЛОК ОТРИСОВКИ ОБЪЕКТОВ В ОКНЕ ПРОГРАММЫ
     # ... тут закрашиваем фон и рисуем все объекты программы ...
+    screen.blit(fon, (fon_x, fon_y))
 
+    for r in range(0,10):
+        for c in range(0,10):
+            x = wc + c * wc
+            y = hc + r * hc
+            screen.blit(cellclose, (x,y))
 
     # Отображение нарисованных объектов
     pygame.display.flip()
