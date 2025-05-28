@@ -2,6 +2,7 @@ import random
 
 MINEFIELD_ROWS = 10
 MINEFIELD_COLUMNS = 10
+NUMBER_MINES = 13
 
 # Create matrix (list of lists) and fill it by "0"
 # recipe: https://stackoverflow.com/questions/6667201/how-to-define-a-two-dimensional-array
@@ -141,6 +142,7 @@ def do_Step_Minefield(toRow: int, toColumn: int) -> bool:
 
     return True
 
+"""
 # It is temporary function.
 # Print all Minefield to console
 # If showMine = True then show mines
@@ -179,3 +181,5 @@ while (True):
     print_Minefield(False)
     r, c =  map(int, input("Do step (ctrl+c for stop), row column: ").split())
     print()
+
+"""
