@@ -7,14 +7,14 @@ h = 600  # Высота окна
 screen = pygame.display.set_mode([w, h])
 
 
-cellclose = pygame.image.load('minefield\\background\\paralax-background.png')
+cellclose = pygame.image.load('minefield\\background\\close-cell.png')
 wc = w // 12
 hc = h // 12
 delta=w // 100
 cellclose = pygame.transform.scale(cellclose, (wc-delta,hc-delta))
 
 
-fon = pygame.image.load('minefield\\background\\bg7.png')
+fon = pygame.image.load('minefield\\background\\fon.jpg')
 fon_x = 0
 fon_y = 0
 
