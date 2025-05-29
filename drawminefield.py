@@ -47,7 +47,7 @@ opencell6caper = pygame.image.load("minefield\\background\\open-cell-6-caper.png
 opencell6caper = pygame.transform.scale(opencell6caper, (wc-delta,hc-delta))
 opencell7caper = pygame.image.load("minefield\\background\\open-cell-7-caper.png")
 opencell7caper = pygame.transform.scale(opencell7caper, (wc-delta,hc-delta))
-opencellcaper = pygame.image.load("minefield\\background\\saper.png")
+opencellcaper = pygame.image.load("minefield\\background\\open-cell-caper.png")
 opencellcaper = pygame.transform.scale(opencellcaper, (wc-delta,hc-delta))
 
 # Загружаем фон окна
@@ -95,12 +95,14 @@ FPS = 30  # Устанавливаем нужное значение FPS
 minefield.fill_Minefield(minefield.NUMBER_MINES)
 
 # Игровой цикл и флаг выполнения программы
+# устанавливаем признак что не взорвались
+notBlow = True 
+
 game_run = True
 while game_run:
 
     pos = [0,0]
     mousewas = False
-    notblow = True
 
     # БЛОК ОБРАБОТКИ СОБЫТИЙ ИГРЫ
     for i in pygame.event.get():
@@ -111,21 +113,21 @@ while game_run:
             mousewas = True
 
     # БЛОК ИГРОВОЙ ЛОГИКИ
-    # ... тут размещаем все вычисления ...
-    if mousewas:
+    # делаем шаг если щелкнули мышкой и не взорвались на прошлом шаге
+    if (mousewas and notBlow):
         x = pos[0]
         y = pos[1]
-        #print(x,y)
         c = x // wc
         r = y // hc
-        #print(wc,hc)
-        #print(c,r)
-        notblow = minefield.do_Step_Minefield(r,c)
+        notBlow = minefield.do_Step_Minefield(r,c)
 
-    # БЛОК ОТРИСОВКИ ОБЪЕКТОВ В ОКНЕ ПРОГРАММЫ
-    # ... тут закрашиваем фон и рисуем все объекты программы ...
     screen.blit(fon, (fon_x, fon_y))
-    draw_Minefield(notblow)
+    # отрисовываем минное поле без мин если не взорвались
+    # отрисовываем мины если взорвались
+    if notBlow:
+        draw_Minefield(False) # не рисуем мины
+    else:
+        draw_Minefield(True) # рисуем мины       
 
     # Отображение нарисованных объектов
     pygame.display.flip()
