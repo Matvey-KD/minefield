@@ -1,4 +1,7 @@
+# в этом файле рисуем окно и картинки, обрабатываем игровой процесс
+# загружаем графический модуль pygame 
 import pygame
+# загружаем модуль с функциями и переменными по работе с массивами
 import minefield
 
 pygame.init()
@@ -7,11 +10,13 @@ w = 600  # Ширина окна
 h = 600  # Высота окна
 screen = pygame.display.set_mode([w, h])
 
+# расчитываем размер одной ячейки
 wc = w // (minefield.MINEFIELD_COLUMNS+2)
 hc = h // (minefield.MINEFIELD_ROWS+2)
 delta=w // 100
 
 # Загружаем все картинки ячеек
+# и меняем размер картинок
 cellclose = pygame.image.load("minefield\\background\\close-cell.png")
 cellclose = pygame.transform.scale(cellclose, (wc-delta,hc-delta))
 bomba = pygame.image.load("minefield\\background\\bomba.png")
@@ -56,9 +61,24 @@ fon = pygame.transform.scale(fon, (w,h))
 fon_x = 0
 fon_y = 0
 
-# Функция, которая рисует минное поле по информации из массива minefield.minefieldArray[][] 
+# Загружаем картинки финальных сообщений
+# картинка удачного завершения игры
+wewin = pygame.image.load("minefield\\background\\green-kartinka.png")
+wewin = pygame.transform.scale(wewin, (w // 2, h // 2))
+wewin_x = w // 3
+wewin_y = h // 3
+
+# картинка неудачного завершения игры
+welose = pygame.image.load("minefield\\background\\red-kartinka.png")
+welose = pygame.transform.scale(welose, (w // 2, h // 2))
+welose_x = w // 3
+welose_y = h // 3
+
+# Функция, которая рисует минное поле по информации из массива minefield.minefieldArray[][]
+# у функции один параметр: True - рисовать мины, False - не рисовать мины 
 def draw_Minefield(showMine:bool) -> bool:
 
+    #  идем по всем ячейкам массива и рисуем нужные картинки в окне
     for r in range(1, minefield.MINEFIELD_ROWS+1):
         for c in range(1, minefield.MINEFIELD_COLUMNS+1):
             v = minefield.minefieldArray[r][c]
@@ -108,12 +128,12 @@ while game_run:
     for i in pygame.event.get():
         if i.type == pygame.QUIT:  # Закрыли окно?
             game_run = False
-        if i.type == pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
+        if i.type == pygame.MOUSEBUTTONDOWN: # нажали кнопку мыши?
+            pos = pygame.mouse.get_pos() # запоминам координаты нажатой кнопки
             mousewas = True
 
     # БЛОК ИГРОВОЙ ЛОГИКИ
-    # делаем шаг если щелкнули мышкой и не взорвались на прошлом шаге
+    # делаем шаг если щелкнули мышкой и не взорвались на прошлом шаге цикла
     if (mousewas and notBlow):
         x = pos[0]
         y = pos[1]
@@ -127,8 +147,36 @@ while game_run:
     if notBlow:
         draw_Minefield(False) # не рисуем мины
     else:
-        draw_Minefield(True) # рисуем мины       
+        draw_Minefield(True) # рисуем мины  
+        game_run = False
+    
+    # если мы находимся в правой нижней клетке, то заканчиваем игру
+    if minefield.minefieldArray[minefield.MINEFIELD_ROWS][minefield.MINEFIELD_COLUMNS] >= 110: 
+        draw_Minefield(True) # рисуем мины  
+        game_run = False
 
+    # Отображение нарисованных объектов
+    pygame.display.flip()
+
+    # Контроль FPS
+    clock.tick(FPS)
+
+game_run = True
+while game_run:
+    # БЛОК ОБРАБОТКИ СОБЫТИЙ ФИНАЛЬНОГО СООБЩЕНИЯ
+    for i in pygame.event.get():
+        if i.type == pygame.QUIT:  # Закрыли окно?
+            game_run = False
+        if i.type == pygame.MOUSEBUTTONDOWN: # не нажали кнопку мыши?
+            game_run = False
+
+    # если notBlow = True то мы находимся в правой нижней клетке и мы победили
+    # иначе мы проиграли, наступили на мину.
+    if notBlow:
+        screen.blit(wewin, (wewin_x, wewin_y))
+    else:
+        screen.blit(welose, (welose_x, welose_y))
+        
     # Отображение нарисованных объектов
     pygame.display.flip()
 
