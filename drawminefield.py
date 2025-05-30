@@ -56,6 +56,17 @@ fon = pygame.transform.scale(fon, (w,h))
 fon_x = 0
 fon_y = 0
 
+# Загружаем картинки финальных сообщений
+wewin = pygame.image.load("minefield\\background\\fon.jpg")
+wewin = pygame.transform.scale(wewin, (w // 2, h // 2))
+wewin_x = w // 3
+wewin_y = h // 3
+
+welose = pygame.image.load("minefield\\background\\fon.jpg")
+welose = pygame.transform.scale(welose, (w // 2, h // 2))
+welose_x = w // 3
+welose_y = h // 3
+
 # Функция, которая рисует минное поле по информации из массива minefield.minefieldArray[][] 
 def draw_Minefield(showMine:bool) -> bool:
 
@@ -127,8 +138,36 @@ while game_run:
     if notBlow:
         draw_Minefield(False) # не рисуем мины
     else:
-        draw_Minefield(True) # рисуем мины       
+        draw_Minefield(True) # рисуем мины  
+        game_run = False
+    
+    # если мы находимся в правой нижней клетке, то заканчиваем игру
+    if minefield.minefieldArray[minefield.MINEFIELD_ROWS][minefield.MINEFIELD_COLUMNS] >= 110: 
+        draw_Minefield(True) # рисуем мины  
+        game_run = False
 
+    # Отображение нарисованных объектов
+    pygame.display.flip()
+
+    # Контроль FPS
+    clock.tick(FPS)
+
+game_run = True
+while game_run:
+    # БЛОК ОБРАБОТКИ СОБЫТИЙ ФИНАЛЬНОГО СООБЩЕНИЯ
+    for i in pygame.event.get():
+        if i.type == pygame.QUIT:  # Закрыли окно?
+            game_run = False
+        if i.type == pygame.MOUSEBUTTONDOWN:
+            game_run = False
+
+    # если notBlow = True то мы находимся в правой нижней клетке и мы победили
+    # иначе мы проиграли, наступили на мину.
+    if notBlow:
+        screen.blit(wewin, (wewin_x, wewin_y))
+    else:
+        screen.blit(welose, (welose_x, welose_y))
+        
     # Отображение нарисованных объектов
     pygame.display.flip()
 
