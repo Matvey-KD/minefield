@@ -57,12 +57,12 @@ fon_x = 0
 fon_y = 0
 
 # Загружаем картинки финальных сообщений
-wewin = pygame.image.load("minefield\\background\\fon.jpg")
+wewin = pygame.image.load("minefield\\background\\green-kartinka.png")
 wewin = pygame.transform.scale(wewin, (w // 2, h // 2))
 wewin_x = w // 3
 wewin_y = h // 3
 
-welose = pygame.image.load("minefield\\background\\fon.jpg")
+welose = pygame.image.load("minefield\\background\\red-kartinka.png")
 welose = pygame.transform.scale(welose, (w // 2, h // 2))
 welose_x = w // 3
 welose_y = h // 3
